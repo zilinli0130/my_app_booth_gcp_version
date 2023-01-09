@@ -1,4 +1,4 @@
-# AppBooth
+#  Lightweight Web Application Search and Purchase Platform
 
 ### *Introduction*
 
