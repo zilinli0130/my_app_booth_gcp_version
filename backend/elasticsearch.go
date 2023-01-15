@@ -30,7 +30,7 @@ func InitElasticsearchBackend() {
         panic(err)
     }
 
-    // Check if the APP_INDEX exists or not
+    // Check if the APP_INDEX exists or not here
     exists, err := newClient.IndexExists(constants.APP_INDEX).Do(context.Background())
     if err != nil {
         panic(err)
@@ -113,5 +113,17 @@ func (backend *ElasticsearchBackend) SaveToES(i interface{}, index string, id st
         Do(context.Background())
     return err
 }
+
+// Delete from ES
+func (backend *ElasticsearchBackend) DeleteFromES(query elastic.Query, index string) error {
+    _, err := backend.client.DeleteByQuery().
+        Index(index).
+        Query(query).
+        Pretty(true).
+        Do(context.Background())
+
+    return err
+}
+
 
 
