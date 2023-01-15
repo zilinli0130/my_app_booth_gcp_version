@@ -20,11 +20,76 @@
 ![Frontend Design](images/frontend_architecture.PNG)
 
 ---
+### *Frontend Software Components*
+
+#### 1. App
+
+This is the main application component
+* Layout
+  * Header
+    * Display user menu if user is logged in
+  * Content
+    * Display LoginForm if user is not logged in
+    * Display HomePage if user is logged in
+ 
+#### 2. LoginForm
+
+It supports user login function
+  * Form
+    * FormItem: username
+    * FormItem: password
+    * FormItem: login button
+  * SignupForm
+  
+#### 3. SignupForm
+
+It supports user signup function
+  * Form
+    * Form Item: username
+    * Form Item: password
+    * Form Item: signup button
+
+#### 4. HomePage
+
+It supports tab switching functions
+* TabPane
+  * BrowseApps: search App item by title or description and support App item payment checkout function
+  * PostApps: upload App item by current user
+  * MyApps: display uploaded App item from current user and support App item deleting function
+
+#### 5. BrowseApps
+
+It supports App item search and payment checkout functions
+* Form
+* ListItem
+  * Card: display App item information
+  * Button: payment checkout App item
+  * Image: display App item
+  
+#### 6. PostApps
+
+It supports App item uploading function
+* Form
+  * FormItem: App item description
+  * FormItem: App item title
+  * FormItem: App item pictue
+  * FormItem: App item price
+  * FormItem: submit App item uploading button
+  
+#### 7. MyApps
+
+It displays App uploaded from current user and supports App deletion function
+* ListItem
+  * Card: display App item information
+  * Button: delete App item
+  * Image: display App item
+
+---
 
 ### *Backend Software Architecture*
 
 
-![Backend Design](images/backend_architecture.PNG)
+![Backend Design](images/backend_architecture_flow.PNG)
 
 
 ---
@@ -33,29 +98,28 @@
 The handler responses for handling specific client request redirected from HTTP router. There is a JWT middleware layer added on top of the handler to verify user
 authentication before handling the client request. The user authenication is JWT token based. A generated token will be sent to client once the first time user login is verified. The client request carries the token afterward for verifying the user information. The CORS request is enabled to unblocks cross domain query.
 
-#### UploadHandler
+#### 1. UploadHandler
 
 * Parse the HTTP request into App item object
 * Call the `SaveApp` from the service layer for futher App uploading actions 
 
-#### SignupHandler
+#### 2. SignupHandler
 * Parse the HTTP request into user object
 * Call the `AddUser` from the service layer for further user registration actions
 
-#### LoginHandler
+#### 3. LoginHandler
 * Parse the HTTP request into user object
 * Call the `CheckUser` from service layer for further user authentication actions
 
-
-#### SearchHandler
+#### 4. SearchHandler
 * Parse the HTTP request into title, description and username query string 
 * Call the `SearchApp` from service layer for further App searching actions
 
-#### DeleteHandler
+#### 5. DeleteHandler
 * Parse the HTTP request into App item id query string 
 * Call the `DeleteApp` from service layer for further App deletion actions
 
-#### CheckoutHandler
+#### 6. CheckoutHandler
 * Parse the HTTP request into App item id query string 
 * Call the `Checkout` from service layer for further App payment checkout actions
 
@@ -63,22 +127,22 @@ authentication before handling the client request. The user authenication is JWT
 
 ### *Backend Software Components (Service)*
 
-#### SaveApp
+#### 1. SaveApp
 
 * Call `CreateAppWithPrice` from backend client layer to create App product id and price id via Stripe API
 * Call `SaveToGCS` from backend client layer to save media file for the APP item and create the media file link
 * Call `SaveToES` from baclend client layer to save App item metadata
 
-#### AddUser
+#### 2. AddUser
 * Verify the user is not existed
 * Call `SaveToES` from baclend client layer to save user information metadata
 
 
-#### CheckUser
+#### 3. CheckUser
 * Call `ReadFromES` from baclend client layer to retrieve user information
 * Verify the user password
 
-#### SearchApp
+#### 4. SearchApp
 * Provide default search method
 * Provide search by username only method
 * Provide search by title only method
@@ -86,11 +150,11 @@ authentication before handling the client request. The user authenication is JWT
 * Call `ReadFromES` from baclend client layer to search App items
 
 
-#### DeleteApp
+#### 5. DeleteApp
 * It allows to delete only the App items uploaded by the current user 
 * Call `DeleteFromES` from baclend client layer to delete App item
 
-#### Checkout
+#### 6. Checkout
 * Call `SearchApp` from current layer to retrieve the App item price id 
 * Call `CreateCheckoutSession` from backend client layer to retreive the payment checkout link
 
@@ -98,29 +162,29 @@ authentication before handling the client request. The user authenication is JWT
 
 ### *Backend Software Components (Backend Client)*
 
-#### ReadFromES
+#### 1. ReadFromES
 * Use ElasticSearch backend client object to read data based on input query string and index
 
-#### SaveToES
+#### 2. SaveToES
 * Use ElasticSearch backend client object to save data based on input query string and index
 
-#### DeleteFromES
+#### 3. DeleteFromES
 * Use ElasticSearch backend client object to delete data based on input query string and index
 
-#### SaveToGCS
+#### 4. SaveToGCS
 * Use Google Cloud Storage backend object client to save media data
 
-#### CreateAppWithPrice
+#### 5. CreateAppWithPrice
 * Call Stripe API to create App item product id and price id
 
-#### CreateCheckoutSession
+#### 6. CreateCheckoutSession
 * Call Stripe API to retrieve App item payment checkout link based on App item price id
 
 
 ---
 ### *Database*
 
-* ElasticSearch (ES)
+#### 1. ElasticSearch (ES)
   * NoSQL database  
   * Store user information and App item metadata (app basic information, media file url, product id and price id for payment checkout link query)
   * Create inverted index for App item title and description
@@ -129,11 +193,16 @@ authentication before handling the client request. The user authenication is JWT
  The following figures show the schema for App item and user information in ElasticSearch (ES):
  
  ![Backend Design](images/app_item_schema.PNG)
+ 
+ Figure 4. App item schema
+ 
+ 
  ![Backend Design](images/user_information_schema.PNG)
  
+ Figure 5. User information schema
  
   
-* Google Cloud Storage (GCS)
+#### 2. Google Cloud Storage (GCS)
   * Blob storage for non-structured data 
   * Store media files for App item
   * Link of each media file is stored as metadata in ElasticSearch (ES)
