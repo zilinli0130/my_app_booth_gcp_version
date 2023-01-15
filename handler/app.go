@@ -6,6 +6,7 @@ import (
     "net/http"
     "strconv"
     "github.com/pborman/uuid"
+    // "github.com/gorilla/mux"
 
     "appstore/service"
     "appstore/model"
@@ -65,11 +66,12 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
    w.Header().Set("Content-Type", "application/json")
    title := r.URL.Query().Get("title")
    description := r.URL.Query().Get("description")
+   username := r.URL.Query().Get("username")
 
 
    var apps []model.App
    var err error
-   apps, err = service.SearchApps(title, description)
+   apps, err = service.SearchApps(title, description, username)
    if err != nil {
        http.Error(w, "Failed to read Apps from backend", http.StatusInternalServerError)
        return
@@ -105,3 +107,21 @@ func checkoutHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Println("Checkout process started!")
  }
  
+ 
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Received one request for delete")
+
+    user := r.Context().Value("user")
+    claims := user.(*jwt.Token).Claims
+    username := claims.(jwt.MapClaims)["username"].(string)
+    // id := mux.Vars(r)["id"]
+    id := r.URL.Query().Get("item_id")
+
+    if err := service.DeleteApp(id, username); err != nil {
+        http.Error(w, "Failed to delete app from backend", http.StatusInternalServerError)
+        fmt.Printf("Failed to delete app from backend %v\n", err)
+        return
+    }
+    fmt.Println("App is deleted successfully")
+}
+
