@@ -15,7 +15,12 @@ import (
 )
 
 
-func SearchApps(title string, description string) ([]model.App, error) {
+func SearchApps(title string, description string, username string) ([]model.App, error) {
+   
+   if username != "" {
+    return SearchAppByUserName(username)
+   }
+
    if title == "" {
        return SearchAppsByDescription(description)
    }
@@ -67,6 +72,21 @@ func SearchAppsByDescription(description string) ([]model.App, error) {
    return getAppFromSearchResult(searchResult), nil
 }
 
+func SearchAppByUserName(username string) ([]model.App, error) {
+    query := elastic.NewMatchQuery("user", username)
+    query.Operator("AND")
+    if username == "" {
+        query.ZeroTermsQuery("all")
+    }
+    searchResult, err := backend.ESBackend.ReadFromES(query, constants.APP_INDEX);
+    if err != nil {
+        return nil, err
+    }
+
+
+    return getAppFromSearchResult(searchResult), nil
+}
+
 func SearchAppsByID(appID string) (*model.App, error) {
    query := elastic.NewMatchQuery("id", appID)
    searchResult, err := backend.ESBackend.ReadFromES(query, constants.APP_INDEX)
@@ -94,7 +114,7 @@ func getAppFromSearchResult(searchResult *elastic.SearchResult) []model.App {
 func SaveApp(app *model.App, file multipart.File) error {
 
     // Stripe Payment
-    productID, priceID, err := backend.CreateProductWithPrice(app.Title, app.Description, int64(app.Price*100))
+    productID, priceID, err := backend.CreateProductWithPrice(app.Title, app.Description, int64(app.Price))
     if err != nil {
         fmt.Printf("Failed to create Product and Price using Stripe SDK %v\n", err)
         return err
@@ -120,6 +140,15 @@ func SaveApp(app *model.App, file multipart.File) error {
     fmt.Printf("Product %s with price %s is successfully created", productID, priceID)
     return nil
  }
+
+ func DeleteApp(id string, user string) error {
+    query := elastic.NewBoolQuery()
+    query.Must(elastic.NewTermQuery("id", id))
+    query.Must(elastic.NewTermQuery("user", user))
+
+    return backend.ESBackend.DeleteFromES(query, constants.APP_INDEX)
+}
+
 
  func CheckoutApp(domain string, appID string) (*stripe.CheckoutSession, error) {
     app, err := SearchAppsByID(appID)
