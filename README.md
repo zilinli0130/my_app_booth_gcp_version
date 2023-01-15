@@ -1,23 +1,30 @@
-#  Lightweight Web Application Search and Purchase Platform
+#  MyAppBooth: Lightweight Web Application Search and Purchase Platform
 
 ### *Introduction*
 
+This page documents the software design details for the `MyAppBooth` web application which mainly supports user authentication, App item search and payment checkout features
 
 ---
 
 ### *Developer Environment*
 
-
 * Frontend
-
+  * Framework: React
+  * Programming Language: JSX (converted to client browser compatible JS version via Babel under the hood)
+  * Backend: node.js
+  
 * Backend
-
+  * Developer Environment: Google Compute Engine (GCE) virtual machine
+  * Programming Language: Go
+  * CORS Policy: enabled as ok
 
 ---
 
 ### *Frontend Software Architecture*
 
 ![Frontend Design](images/frontend_architecture.PNG)
+
+Figure 1. Frontend software architecture
 
 ---
 ### *Frontend Software Components*
@@ -90,6 +97,8 @@ It displays App uploaded from current user and supports App deletion function
 
 
 ![Backend Design](images/backend_architecture_flow.PNG)
+
+ Figure 2. Backend software architecture
 
 
 ---
@@ -194,12 +203,12 @@ authentication before handling the client request. The user authenication is JWT
  
  ![Backend Design](images/app_item_schema.PNG)
  
- Figure 4. App item schema
+ Figure 3. App item schema
  
  
  ![Backend Design](images/user_information_schema.PNG)
  
- Figure 5. User information schema
+ Figure 4. User information schema
  
   
 #### 2. Google Cloud Storage (GCS)
