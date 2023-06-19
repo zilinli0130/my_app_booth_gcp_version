@@ -4,6 +4,7 @@
 
 This page documents the software design details for the `MyAppBooth` web application which mainly supports user authentication, App item search and payment checkout features
 
+Demo Link: https://drive.google.com/file/d/1ydBMEwYaaHICkHihV3xPLtpRHoY0kulB/view?usp=drive_link
 ---
 
 ### *Developer Environment*
