@@ -6,7 +6,7 @@ This page documents the software design details for the `MyAppBooth` web applica
 
 #### Demo Link: https://drive.google.com/file/d/1ydBMEwYaaHICkHihV3xPLtpRHoY0kulB/view?usp=drive_link
 
-#### Note: this app_booth is GCP version (ElasticSearch server on GCE, media file storage on GCS). For the AWS version (ElasticSearch server on EC2, media file storage on S3), please refer to [app_booth_aws_version](https://github.com/zilinli0130/app_booth_aws_version/), the overall software architecture is the same.
+#### Note: this `MyAppBooth` is GCP version (ElasticSearch server on GCE, media file storage on GCS). For the AWS version (ElasticSearch server on EC2, media file storage on S3), please refer to [my_app_booth_aws_version](https://github.com/zilinli0130/app_booth_aws_version/), the overall software architecture is the same.
 ---
 
 ### *Developer Environment*
