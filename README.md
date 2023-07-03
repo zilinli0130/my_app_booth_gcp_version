@@ -5,6 +5,8 @@
 This page documents the software design details for the `MyAppBooth` web application which mainly supports user authentication, App item search and payment checkout features
 
 #### Demo Link: https://drive.google.com/file/d/1ydBMEwYaaHICkHihV3xPLtpRHoY0kulB/view?usp=drive_link
+
+#### Note: this app_booth is GCP version (ElasticSearch server on GCE, media file storage on GCS). For the AWS version (ElasticSearch server on EC2, media file storage on S3), please refer to ![app_booth_aws_version](), the overall software architecture is the same.
 ---
 
 ### *Developer Environment*
